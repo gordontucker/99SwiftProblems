@@ -61,7 +61,7 @@ public class List<T>: CustomStringConvertible {
     
     public subscript(index: Int) -> T? {
         guard index > -1 else { return nil }
-        guard index > 0 else {return value }
+        guard index > 0 else { return value }
         return nextItem?[index - 1]
     }
     
