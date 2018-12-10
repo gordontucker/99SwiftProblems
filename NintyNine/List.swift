@@ -255,7 +255,7 @@ public class List<T>: CustomStringConvertible {
             sublists.forEach({ sublist in
                 guard sublist.count == group - 1 else { return }
                 let newFirstNode = List(value)
-                newFirstNode.nextItem = sublist
+                newFirstNode.nextItem = sublist.copy()
                 addToList(newFirstNode)
             })
         }
@@ -266,8 +266,35 @@ public class List<T>: CustomStringConvertible {
         return lists
     }
     
-    public func permutations(group: Int) -> List<List<T>>? {
-        return List<List<T>>(List(value))
+    public func permutations(_ group: Int) -> List<List<T>>? {
+        guard group >= 1 else { return nil }
+        guard group > 1 else {
+            let allMutations = List<List<T>>(List(self.value))
+            for i in 1 ..< self.count {
+                allMutations.lastItem.nextItem = List<List<T>>(List(self.item(at: i)!.value))
+            }
+            return allMutations
+        }
+        
+        let allMutations = List<List<T>>(List(self.value))
+        
+        for i in 0 ..< self.count {
+            let removed = self.removeAt(i)
+            guard let removedValue = removed.removed else { continue }
+            guard let mutations: List = removed.rest else { continue }
+            
+            guard let subpermutations: List<List<T>> = mutations.permutations(group - 1) else { continue }
+            
+            subpermutations.forEach({ (mutation: List) in
+                let first = List(removedValue)
+                first.nextItem = mutation
+                
+                guard first.count == group else { return }
+                allMutations.lastItem.nextItem = List<List<T>>(first)
+            })
+        }
+        
+        return allMutations.nextItem
     }
     
     public func forEach(_ body: (T) -> Void) {

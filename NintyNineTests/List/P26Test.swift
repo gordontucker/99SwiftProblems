@@ -29,4 +29,10 @@ class P26Test: XCTestCase {
             XCTAssertEqual(3, $0.count, "\($0.description) had the wrong number of items")
         }
     }
+    
+    func testPermutations() {
+        let permutations = List("a", "b", "c", "d").permutations(3)
+        
+        XCTAssertEqual("{ { a, b, c }, { a, b, d }, { a, c, b }, { a, c, d }, { a, d, b }, { a, d, c }, { b, a, c }, { b, a, d }, { b, c, a }, { b, c, d }, { b, d, a }, { b, d, c }, { c, a, b }, { c, a, d }, { c, b, a }, { c, b, d }, { c, d, a }, { c, d, b }, { d, a, b }, { d, a, c }, { d, b, a }, { d, b, c }, { d, c, a }, { d, c, b } }", "\(permutations!)")
+    }
 }
